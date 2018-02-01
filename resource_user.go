@@ -46,7 +46,7 @@ func resourceUser() *schema.Resource {
 			},
 			"type": &schema.Schema{
 				Type:     schema.TypeString,
-				Optional: true,
+				Computed: true,
 			},
 			"first_name": &schema.Schema{
 				Type:     schema.TypeString,
@@ -82,7 +82,7 @@ func resourceUser() *schema.Resource {
 			},
 			"account_source": &schema.Schema{
 				Type:     schema.TypeString,
-				Optional: true,
+				Computed: true,
 			},
 			"status": &schema.Schema{
 				Type:     schema.TypeString,
@@ -161,11 +161,43 @@ func resourceUserRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceUserUpdate(d *schema.ResourceData, m interface{}) error {
-	d.SetId("updated")
-	return nil
+
+	client := m.(*cloudcenter.Client)
+
+	newUser := cloudcenter.User{
+		Id:            d.Get("user_id").(string),
+		FirstName:     d.Get("first_name").(string),
+		LastName:      d.Get("last_name").(string),
+		Password:      d.Get("password").(string),
+		EmailAddr:     d.Get("email_address").(string),
+		CompanyName:   d.Get("company_name").(string),
+		PhoneNumber:   d.Get("phone_number").(string),
+		TenantId:      d.Get("tenant_id").(string),
+		Username:      d.Get("username").(string),
+		AccountSource: d.Get("account_source").(string),
+		Type:          d.Get("type").(string),
+	}
+
+	user, err := client.UpdateUser(&newUser)
+
+	if err != nil {
+		return errors.New(err.Error())
+	}
+
+	return setUserResourceData(d, user)
 }
 
 func resourceUserDelete(d *schema.ResourceData, m interface{}) error {
+
+	client := m.(*cloudcenter.Client)
+
+	err := client.DeleteUser(d.Get("email_address").(string))
+
+	if err != nil {
+		return errors.New(err.Error())
+	}
+
+	d.SetId("")
 	return nil
 }
 
@@ -188,6 +220,12 @@ func setUserResourceData(d *schema.ResourceData, u *cloudcenter.User) error {
 	}
 	if err := d.Set("tenant_id", u.TenantId); err != nil {
 		return errors.New("CANNOT SET TENANT ID")
+	}
+	if err := d.Set("type", u.Type); err != nil {
+		return errors.New("CANNOT SET TYPE")
+	}
+	if err := d.Set("account_source", u.AccountSource); err != nil {
+		return errors.New("CANNOT SET ACCOUNT SOURCE")
 	}
 	return nil
 }
