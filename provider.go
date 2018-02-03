@@ -27,7 +27,11 @@ func Provider() *schema.Provider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"cloudcenter_user": resourceUser(),
+			"cloudcenter_user":              resourceUser(),
+			"cloudcenter_bundle":            resourceBundle(),
+			"cloudcenter_plan":              resourcePlan(),
+			"cloudcenter_contract":          resourceContract(),
+			"cloudcenter_activationprofile": resourceActivationProfile(),
 		},
 		ConfigureFunc: providerConfigure,
 	}

@@ -2,7 +2,7 @@ package main
 
 import (
 	"errors"
-	"github.com/cloudcenter"
+	"github.com/cloudcenter-clientlibrary-go/cloudcenter"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
@@ -191,7 +191,7 @@ func resourceUserDelete(d *schema.ResourceData, m interface{}) error {
 
 	client := m.(*cloudcenter.Client)
 
-	err := client.DeleteUser(d.Get("email_address").(string))
+	err := client.DeleteUserByEmail(d.Get("email_address").(string))
 
 	if err != nil {
 		return errors.New(err.Error())

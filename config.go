@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/cloudcenter"
+	"github.com/cloudcenter-clientlibrary-go/cloudcenter"
 )
 
 type Config struct {
