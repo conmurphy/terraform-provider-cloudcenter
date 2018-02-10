@@ -32,6 +32,9 @@ func Provider() *schema.Provider {
 			"cloudcenter_plan":              resourcePlan(),
 			"cloudcenter_contract":          resourceContract(),
 			"cloudcenter_activationprofile": resourceActivationProfile(),
+			"cloudcenter_image":             resourceImage(),
+			"cloudcenter_group":             resourceGroup(),
+			"cloudcenter_role":              resourceRole(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
